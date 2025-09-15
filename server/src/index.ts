@@ -25,8 +25,8 @@ app.get('/api/health', (req, res) => {
 // app.use('/api/auth', authRoutes);
 
 // 404 Handler for unhandled routes
-app.use('*', (req, res) => {
-  res.status(404).json({ message: 'API endpoint not found' });
+app.use((req, res, next) => {
+  res.status(404).json({ message: `API endpoint not found: ${req.method} ${req.originalUrl}` });
 });
 
 // Global Error Handling Middleware
