@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import 'dotenv/config'; 
+import authRoutes from './routes/auth';
+
 
 
 const app = express();
@@ -21,8 +23,8 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'MARCHÉHUB API is running!' });
 });
 
-// API Routes (Will be mounted here later)
-// app.use('/api/auth', authRoutes);
+
+app.use('/api/auth', authRoutes);
 
 // 404 Handler for unhandled routes
 app.use((req, res, next) => {
