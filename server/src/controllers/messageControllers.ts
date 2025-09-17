@@ -67,7 +67,7 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
     // 6. Send response
     res.status(201).json({
       message: 'Message sent successfully',
-      message: message,
+      data: message,
     });
 
   } catch (error) {
@@ -80,59 +80,60 @@ export const sendMessage = async (req: AuthenticatedRequest, res: Response): Pro
 };
 
 export const getConversations = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
-  try {
-    const userId = req.user!.id;
-
-    const conversations = await prisma.message.findMany({
-      where: {
-        OR: [
-          { senderId: userId },
-          { receiverId: userId },
-        ],
-      },
-      distinct: ['senderId', 'receiverId'],
-      include: {
-        sender: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
+    try {
+      const userId = req.user!.id;
+  
+      // Get all unique conversations for the authenticated user
+      const conversations = await prisma.message.findMany({
+        where: {
+          OR: [
+            { senderId: userId },
+            { receiverId: userId },
+          ],
+        },
+        distinct: ['senderId', 'receiverId'],
+        include: {
+          sender: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
+          },
+          receiver: {
+            select: {
+              id: true,
+              name: true,
+              avatarUrl: true,
+            },
           },
         },
-        receiver: {
-          select: {
-            id: true,
-            name: true,
-            avatarUrl: true,
-          },
+        orderBy: {
+          createdAt: 'desc',
         },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-
-    // Format conversations to show the other participant
-    const formattedConversations = conversations.map(conv => {
-      const otherUser = conv.senderId === userId ? conv.receiver : conv.sender;
-      const lastMessage = conv.content.length > 50 
-        ? conv.content.substring(0, 50) + '...' 
-        : conv.content;
-
-      return {
-        id: conv.id,
-        otherUser,
-        lastMessage,
-        createdAt: conv.createdAt,
-        unreadCount: 0,
-      };
-    });
-
-    res.status(200).json(formattedConversations);
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error while fetching conversations' });
-  }
-};
+      });
+  
+      // Format conversations to show the other participant
+      const formattedConversations = conversations.map((conv: any) => {
+        const otherUser = conv.senderId === userId ? conv.receiver : conv.sender;
+        const lastMessage = conv.content.length > 50 
+          ? conv.content.substring(0, 50) + '...' 
+          : conv.content;
+  
+        return {
+          id: conv.id,
+          otherUser,
+          lastMessage,
+          createdAt: conv.createdAt,
+          unreadCount: 0, // You can implement unread count later
+        };
+      });
+  
+      res.status(200).json(formattedConversations);
+    } catch (error) {
+      res.status(500).json({ message: 'Internal server error while fetching conversations' });
+    }
+  };
 
 export const getMessages = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
   try {
