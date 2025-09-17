@@ -6,6 +6,7 @@ import 'dotenv/config';
 import authRoutes from './routes/auth';
 import testRoutes from './routes/test';
 import productsRoutes from './routes/products';
+import messagesRoutes from './routes/messages';
 
 
 
@@ -27,6 +28,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/test', testRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/messages', messagesRoutes);
 app.use((req, res, next) => {
   res.status(404).json({ message: `API endpoint not found: ${req.method} ${req.originalUrl}` });
 });

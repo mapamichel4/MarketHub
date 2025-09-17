@@ -29,3 +29,10 @@ export const productUpdateSchema = productCreateSchema.partial();
 export type ProductCreateInput = z.infer<typeof productCreateSchema>;
 export type ProductUpdateInput = z.infer<typeof productUpdateSchema>;
 
+export const messageCreateSchema = z.object({
+  content: z.string().min(1, 'Message content is required').max(1000),
+  receiverId: z.string().cuid('Invalid receiver ID'),
+  productId: z.string().cuid('Invalid product ID').optional().nullable(),
+}).strict();
+
+export type MessageCreateInput = z.infer<typeof messageCreateSchema>;
