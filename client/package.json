@@ -11,6 +11,12 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@progress/kendo-react-buttons": "^12.0.1",
+    "@progress/kendo-react-form": "^12.0.1",
+    "@progress/kendo-react-inputs": "^12.0.1",
+    "@progress/kendo-react-layout": "^12.0.1",
+    "@progress/kendo-react-notification": "^12.0.1",
+    "@progress/kendo-theme-default": "^12.0.1",
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/react-query": "^5.87.4",
     "@tanstack/react-query-devtools": "^5.87.4",

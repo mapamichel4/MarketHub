@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Form, Field, FormElement } from '@progress/kendo-react-form';
 import { Input } from '@progress/kendo-react-inputs';
 import { Button } from '@progress/kendo-react-buttons';
@@ -25,20 +24,24 @@ export const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
             label="Email"
             type="email"
             required
+            style={{ marginBottom: '1rem' }}
           />
           <Field
             name="password"
             component={Input}
-            label="Mot de passe"
+            label="Password"
             type="password"
             required
+            style={{ marginBottom: '1.5rem' }}
           />
           <Button
             type="submit"
             themeColor="primary"
+            size="large"
             disabled={loading}
+            style={{ width: '100%', backgroundColor: 'var(--primary)' }}
           >
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </Button>
         </FormElement>
       )}

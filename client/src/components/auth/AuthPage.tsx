@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@progress/kendo-react-buttons';
-import { Notification } from '@progress/kendo-react-notification';
+import { Notification, NotificationGroup } from '@progress/kendo-react-notification';
 import { LoginForm } from './LoginForm';
 import { RegisterForm } from './RegisterForm';
 import { authService } from '../../services/authService';
@@ -17,10 +17,10 @@ export const AuthPage = () => {
     mutationFn: authService.login,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      setNotification({ message: 'Connexion réussie !', type: 'success' });
+      setNotification({ message: 'Login successful!', type: 'success' });
     },
     onError: () => {
-      setNotification({ message: 'Erreur de connexion', type: 'error' });
+      setNotification({ message: 'Login failed', type: 'error' });
     },
   });
 
@@ -28,10 +28,10 @@ export const AuthPage = () => {
     mutationFn: authService.register,
     onSuccess: (data) => {
       setAuth(data.user, data.token);
-      setNotification({ message: 'Inscription réussie !', type: 'success' });
+      setNotification({ message: 'Registration successful!', type: 'success' });
     },
     onError: () => {
-      setNotification({ message: 'Erreur lors de l\'inscription', type: 'error' });
+      setNotification({ message: 'Registration failed', type: 'error' });
     },
   });
 
@@ -44,11 +44,12 @@ export const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow">
+    <div className="min-h-screen flex items-center justify-center market-theme">
+      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-xl shadow-xl border border-slate-200">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-900">
-            {isLogin ? 'Connexion' : 'Inscription'}
+          <h1 className="text-3xl font-bold" style={{ color: 'var(--text)' }}>MarketHub</h1>
+          <h2 className="text-xl font-semibold mt-2" style={{ color: 'var(--text-light)' }}>
+            {isLogin ? 'Sign In' : 'Sign Up'}
           </h2>
         </div>
 
@@ -67,21 +68,34 @@ export const AuthPage = () => {
         <div className="text-center">
           <Button
             fillMode="flat"
+            themeColor="primary"
             onClick={() => setIsLogin(!isLogin)}
           >
-            {isLogin ? 'Créer un compte' : 'Déjà un compte ?'}
+            {isLogin ? 'Create Account' : 'Already have an account?'}
           </Button>
         </div>
 
-        {notification && (
-          <Notification
-            type={notification.type}
-            closable
-            onClose={() => setNotification(null)}
-          >
-            {notification.message}
-          </Notification>
-        )}
+        <NotificationGroup
+          style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: 1000
+          }}
+        >
+          {notification && (
+            <Notification
+              type={{
+                style: notification.type === 'success' ? 'success' : 'error',
+                icon: true
+              }}
+              closable
+              onClose={() => setNotification(null)}
+            >
+              <span>{notification.message}</span>
+            </Notification>
+          )}
+        </NotificationGroup>
       </div>
     </div>
   );

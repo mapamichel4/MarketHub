@@ -21,8 +21,9 @@ export const RegisterForm = ({ onSubmit, loading }: RegisterFormProps) => {
           <Field
             name="name"
             component={Input}
-            label="Nom complet"
+            label="Full Name"
             required
+            style={{ marginBottom: '1rem' }}
           />
           <Field
             name="email"
@@ -30,26 +31,31 @@ export const RegisterForm = ({ onSubmit, loading }: RegisterFormProps) => {
             label="Email"
             type="email"
             required
+            style={{ marginBottom: '1rem' }}
           />
           <Field
             name="location"
             component={Input}
-            label="Localisation"
+            label="Location"
             required
+            style={{ marginBottom: '1rem' }}
           />
           <Field
             name="password"
             component={Input}
-            label="Mot de passe"
+            label="Password"
             type="password"
             required
+            style={{ marginBottom: '1.5rem' }}
           />
           <Button
             type="submit"
             themeColor="primary"
+            size="large"
             disabled={loading}
+            style={{ width: '100%', backgroundColor: 'var(--primary)' }}
           >
-            {loading ? 'Inscription...' : "S'inscrire"}
+            {loading ? 'Creating account...' : 'Sign Up'}
           </Button>
         </FormElement>
       )}
