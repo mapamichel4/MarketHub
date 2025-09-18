@@ -1,75 +1,76 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAuthStore } from '../store/authStore';
+import apiClient from './api';
 
-interface LoginResponse {
-  user: any;
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface RegisterRequest {
+  email: string;
+  password: string;
+  name: string;
+  location: string;
+}
+
+export interface AuthResponse {
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    location: string;
+    createdAt: string;
+  };
   token: string;
 }
+
+export const authService = {
+  login: async (credentials: LoginRequest): Promise<AuthResponse> => {
+    const response = await apiClient.post<AuthResponse>('/auth/login', credentials);
+    return response.data;
+  },
+
+  register: async (userData: RegisterRequest): Promise<AuthResponse> => {
+    const response = await apiClient.post<AuthResponse>('/auth/register', userData);
+    return response.data;
+  },
+
+  getProfile: async (): Promise<AuthResponse['user']> => {
+    const response = await apiClient.get<AuthResponse['user']>('/auth/me');
+    return response.data;
+  },
+};
+
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuthStore } from '../store/authStore';
 
 export const useAuthMutations = () => {
   const queryClient = useQueryClient();
   const { login, logout } = useAuthStore();
 
   const loginMutation = useMutation({
-    mutationFn: async (credentials: { email: string; password: string }) => {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-
-      return response.json();
-    },
-    onSuccess: (data: LoginResponse) => {
+    mutationFn: authService.login,
+    onSuccess: (data) => {
       login(data.user, data.token);
       queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      throw new Error(error.response?.data?.message || 'Erreur de connexion');
     },
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (userData: {
-      email: string;
-      password: string;
-      name: string;
-      location: string;
-    }) => {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message);
-      }
-
-      return response.json();
-    },
-    onSuccess: (data: LoginResponse) => {
+    mutationFn: authService.register,
+    onSuccess: (data) => {
       login(data.user, data.token);
       queryClient.invalidateQueries({ queryKey: ['user'] });
     },
-  });
-
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      logout();
+    onError: (error: any) => {
+      throw new Error(error.response?.data?.message || "Erreur d'inscription");
     },
   });
 
   return {
     loginMutation,
     registerMutation,
-    logoutMutation,
   };
 };

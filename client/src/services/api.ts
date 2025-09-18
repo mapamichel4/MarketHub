@@ -1,23 +1,40 @@
+import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-export const apiClient = async (url: string, options: RequestInit = {}) => {
-  const { token } = useAuthStore.getState();
-  
-  const headers = {
+// Configuration de base d'Axios
+const apiClient = axios.create({
+  baseURL: 'http://localhost:5000/api',
+  timeout: 10000,
+  headers: {
     'Content-Type': 'application/json',
-    ...(token && { Authorization: `Bearer ${token}` }),
-    ...options.headers,
-  };
+  },
+});
 
-  const response = await fetch(`http://localhost:5000/api${url}`, {
-    ...options,
-    headers,
-  });
-
-  if (response.status === 401) {
-    useAuthStore.getState().logout();
-    window.location.href = '/login';
+// Intercepteur pour ajouter le token d'authentification
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
+);
 
-  return response;
-};
+// Intercepteur pour gérer les erreurs globales
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Déconnexion automatique si token invalide
+      useAuthStore.getState().logout();
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default apiClient;
