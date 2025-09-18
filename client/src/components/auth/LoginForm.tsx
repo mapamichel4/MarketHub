@@ -1,50 +1,76 @@
-import { Form, Field, FormElement } from '@progress/kendo-react-form';
-import { Input } from '@progress/kendo-react-inputs';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@progress/kendo-react-buttons';
-import { LoginData } from '../../types/auth';
+import { Input } from '@progress/kendo-react-inputs';
+import { Notification } from '@progress/kendo-react-notification';
+import { loginSchema, type LoginInput } from '../../validations/auth';
+import { useAuthMutations } from '../../services/authService';
 
-interface LoginFormProps {
-  onSubmit: (data: LoginData) => void;
-  loading?: boolean;
-}
+const LoginForm = () => {
+  const { loginMutation } = useAuthMutations();
 
-export const LoginForm = ({ onSubmit, loading }: LoginFormProps) => {
-  const handleSubmit = (dataItem: { [name: string]: any }) => {
-    onSubmit(dataItem as LoginData);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = (data: LoginInput) => {
+    loginMutation.mutate(data);
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      render={() => (
-        <FormElement>
-          <Field
-            name="email"
-            component={Input}
-            label="Email"
-            type="email"
-            required
-            style={{ marginBottom: '1rem' }}
-          />
-          <Field
-            name="password"
-            component={Input}
-            label="Password"
-            type="password"
-            required
-            style={{ marginBottom: '1.5rem' }}
-          />
-          <Button
-            type="submit"
-            themeColor="primary"
-            size="large"
-            disabled={loading}
-            style={{ width: '100%', backgroundColor: 'var(--primary)' }}
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </Button>
-        </FormElement>
+    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Connexion</h2>
+      
+      {loginMutation.isError && (
+        <Notification type="error" className="mb-4">
+          {loginMutation.error.message}
+        </Notification>
       )}
-    />
+
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <Input
+            {...register('email')}
+            type="email"
+            label="Email"
+            required
+            className="w-full"
+            valid={!errors.email}
+          />
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+          )}
+        </div>
+
+        <div>
+          <Input
+            {...register('password')}
+            type="password"
+            label="Mot de passe"
+            required
+            className="w-full"
+            valid={!errors.password}
+          />
+          {errors.password && (
+            <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+          )}
+        </div>
+
+        <Button
+          type="submit"
+          themeColor="primary"
+          className="w-full"
+          disabled={loginMutation.isPending}
+        >
+          {loginMutation.isPending ? 'Connexion...' : 'Se connecter'}
+        </Button>
+      </form>
+    </div>
   );
 };
+
+export default LoginForm;

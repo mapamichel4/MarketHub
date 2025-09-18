@@ -1,72 +1,65 @@
 @import "tailwindcss";
 @import "@progress/kendo-theme-material/dist/all.css";
-/* :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+:root {
+  /* Primary Colors - Vert bleuté */
+  --color-primary-50: #E8F3F2;
+  --color-primary-100: #D1E7E5;
+  --color-primary-200: #A3CFCB;
+  --color-primary-300: #75B7B1;
+  --color-primary-400: #479F97;
+  --color-primary-500: #2A9D8F;
+  --color-primary-600: #218277;
+  --color-primary-700: #19665F;
+  --color-primary-800: #114B47;
+  --color-primary-900: #08302F;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Secondary Colors - Jaune doré */
+  --color-secondary-50: #FDF8EB;
+  --color-secondary-100: #FAF1D7;
+  --color-secondary-200: #F5E3AF;
+  --color-secondary-300: #F0D587;
+  --color-secondary-400: #EBC75F;
+  --color-secondary-500: #E9C46A;
+  --color-secondary-600: #D9B45F;
+  --color-secondary-700: #C9A454;
+  --color-secondary-800: #B99449;
+  --color-secondary-900: #A9843E;
+
+  /* Accent Colors - Orange saumon */
+  --color-accent-50: #FEF2E9;
+  --color-accent-100: #FDE5D3;
+  --color-accent-200: #FBCBA7;
+  --color-accent-300: #F9B17B;
+  --color-accent-400: #F7974F;
+  --color-accent-500: #F4A261;
+  --color-accent-600: #E59257;
+  --color-accent-700: #D6824D;
+  --color-accent-800: #C77243;
+  --color-accent-900: #B86239;
+
+  --color-dark: #264653;
+  --color-light: #F8F9FA;
+  --color-gray: #6C757D;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  font-family: roboto, sans-serif;
+  background-color: var(--color-light);
+  color: var(--color-dark);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+@layer utilities {
+  .bg-primary { background-color: var(--color-primary-500); }
+  .bg-secondary { background-color: var(--color-secondary-500); }
+  .bg-accent { background-color: var(--color-accent-500); }
+  
+  .text-primary { color: var(--color-primary-500); }
+  .text-secondary { color: var(--color-secondary-500); }
+  .text-accent { color: var(--color-accent-500); }
+  
+  .border-primary { border-color: var(--color-primary-500); }
+  .border-secondary { border-color: var(--color-secondary-500); }
+  .border-accent { border-color: var(--color-accent-500); }
 }
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-@import "tailwindcss"; */
