@@ -1,16 +1,18 @@
-// client/src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { ThemeProvider } from './theme/ThemeProvider';
+import { Header } from './components/layout/Header';
 import { useAuthStore } from './store/authStore';
 // import ProductCatalog from './pages/ProductCatalog';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 
-function App() {
+function AppContent() {
   const { isAuthenticated } = useAuthStore();
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 container mx-auto px-4 py-6">
         <Routes>
           <Route 
             path="/login" 
@@ -25,8 +27,18 @@ function App() {
             element={isAuthenticated ? <ProductCatalog /> : <Navigate to="/login" />} 
           /> */}
         </Routes>
-      </div>
-    </Router>
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </ThemeProvider>
   );
 }
 

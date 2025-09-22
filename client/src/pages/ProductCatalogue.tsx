@@ -1,4 +1,3 @@
-// client/src/pages/ProductCatalog.tsx
 import { useState } from 'react';
 import { Grid, GridColumn } from '@progress/kendo-react-grid';
 import { Button } from '@progress/kendo-react-buttons';

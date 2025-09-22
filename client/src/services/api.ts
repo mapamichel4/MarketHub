@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
 
-// Configuration de base d'Axios
 const apiClient = axios.create({
   baseURL: 'http://localhost:5000/api',
   timeout: 10000,
@@ -10,7 +9,6 @@ const apiClient = axios.create({
   },
 });
 
-// Intercepteur pour ajouter le token d'authentification
 apiClient.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
@@ -24,12 +22,10 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Intercepteur pour gérer les erreurs globales
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Déconnexion automatique si token invalide
       useAuthStore.getState().logout();
       window.location.href = '/login';
     }
